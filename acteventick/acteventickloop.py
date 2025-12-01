@@ -3,12 +3,12 @@ from typing import Callable, Type
 from loguru import logger
 
 from acteventick import Action
-from acteventick.event import Event
-from acteventick.event_dispatcher import EventDispatcher
-from acteventick.action_handler import ActionHandler
+from acteventick.events.event import Event
+from acteventick.events.event_dispatcher import EventDispatcher
+from acteventick.actions.action_handler import ActionHandler
 from acteventick.options import Options
 from acteventick.tick_event import TickEvent
-from acteventick.action_dispatcher import ActionDispatcher
+from acteventick.actions.action_dispatcher import ActionDispatcher
 
 
 def _deb_tick_duration(func):
@@ -72,17 +72,17 @@ class ActEvenTickLoop:
         self._event_emitter.push(TickEvent())
         self._event_emitter.emit()
 
-    def register_event_handler(self, event: Type[Event], handler: Callable) -> None:
-        self._event_emitter.register(event, handler)
+    def register_event_handler(self, event_type: Type[Event], handler: Callable) -> None:
+        self._event_emitter.register(event_type, handler)
 
-    def unregister_event_handler(self, event: Type[Event], handler: Callable) -> None:
-        self._event_emitter.unregister(event, handler)
+    def unregister_event_handler(self, event_type: Type[Event], handler: Callable) -> None:
+        self._event_emitter.unregister(event_type, handler)
 
-    def register_action_handler(self, action: Type[Action], handler: ActionHandler) -> None:
-        self._action_dispatcher.register(action, handler)
+    def register_action_handler(self, action_type: Type[Action], handler: ActionHandler) -> None:
+        self._action_dispatcher.register(action_type, handler)
 
-    def unregister_action_handler(self, action: Type[Action], handler: ActionHandler) -> None:
-        self._action_dispatcher.unregister(action, handler)
+    def unregister_action_handler(self, action_type: Type[Action], handler: ActionHandler) -> None:
+        self._action_dispatcher.unregister(action_type, handler)
 
     def push_event(self, event: Event) -> None:
         self._event_emitter.push(event)

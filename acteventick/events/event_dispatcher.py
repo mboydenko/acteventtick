@@ -2,7 +2,7 @@ from collections.abc import Callable
 from queue import Queue
 from typing import Type
 
-from acteventick.event import Event
+from acteventick.events.event import Event
 
 
 class EventDispatcher:

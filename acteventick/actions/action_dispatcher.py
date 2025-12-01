@@ -5,9 +5,9 @@ import time
 
 from loguru import logger
 
-from acteventick.action import Action
-from acteventick.action_handler import ActionHandler
-from acteventick.debug_options import DebugOptions
+from acteventick.actions.action import Action
+from acteventick.actions.action_handler import ActionHandler
+from acteventick.options.debug import DebugOptions
 
 def _deb_action_exec_duration(func):
 

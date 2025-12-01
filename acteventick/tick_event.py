@@ -1,4 +1,4 @@
-from acteventick.event import Event
+from acteventick.events.event import Event
 
 
 class TickEvent(Event):

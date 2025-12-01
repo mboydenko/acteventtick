@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Type
 
-from acteventick.action import Action
+from acteventick.actions.action import Action
 
 
 T = TypeVar("T", bound=Action)
