@@ -1,4 +1,7 @@
 from abc import ABC
 
-class Action(ABC):
+from pydantic import BaseModel
+
+
+class Action(BaseModel, ABC):
     ...

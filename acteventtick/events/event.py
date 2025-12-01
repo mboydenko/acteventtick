@@ -1,4 +1,7 @@
 from abc import ABC
 
-class Event(ABC):
+from pydantic import BaseModel
+
+
+class Event(BaseModel, ABC):
     ...

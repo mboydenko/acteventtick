@@ -4,7 +4,7 @@ from loguru import logger
 
 from acteventtick import Action
 from acteventtick.events.event import Event
-from acteventtick.events.event_dispatcher import EventDispatcher
+from acteventtick.events.event_emitter import EventEmitter
 from acteventtick.actions.action_handler import ActionHandler
 from acteventtick.options import Options
 from acteventtick.tick_event import TickEvent
@@ -27,9 +27,13 @@ def _deb_tick_duration(func):
 
 class ActEventTickLoop:
 
-    def __init__(self, options: Options):
+    def __init__(self, options: Options | None = None):
+        if not options:
+            options = Options()
+
+        self._options = options
         self._action_dispatcher = ActionDispatcher(debug_options=options.debug)
-        self._event_emitter = EventDispatcher()
+        self._event_emitter = EventEmitter()
         self._options = options
         self._running = False
 
@@ -42,23 +46,16 @@ class ActEventTickLoop:
 
     def _loop(self) -> None:
         while self._running:
-            start = time.time()
-
-            self._tick()
-
-            end = time.time()
-            tick_duration = end - start
-            ideal_duration = 1.0 / self._options.clock.max_ticks_in_second
-            max_allowed_duration = 1.0 / self._options.clock.min_ticks_in_second
-
-            if tick_duration > max_allowed_duration:
-                logger.error(
-                    f'Tick too long: {tick_duration * 1e6:.0f} us\n'
-                    f'Max allowed duration: {max_allowed_duration * 1e6:.0f} us\n'
-                    f'Check performance of your actions/events.'
-                )
+            if not self._options.tps.limit:
+                self._tick()
                 continue
 
+            start = time.time()
+            self._tick()
+            end = time.time()
+
+            tick_duration = end - start
+            ideal_duration = 1.0 / self._options.tps.limit
             delay = ideal_duration - tick_duration
 
             if delay < 0:

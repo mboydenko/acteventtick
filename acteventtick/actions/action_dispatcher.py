@@ -37,15 +37,17 @@ class ActionDispatcher:
         self._queue: Queue[Action] = Queue()
         self._handlers: dict[Type[Action], list[ActionHandler]] = {}
 
-    def register(self, action: Type[Action], handler: ActionHandler):
-        if self._handlers.get(action) is None:
-            self._handlers[action] = []
-        self._handlers[action].append(handler)
+    def register(self, action_type: Type[Action], handler: ActionHandler):
+        if self._handlers.get(action_type) is None:
+            self._handlers[action_type] = []
+        self._handlers[action_type].append(handler)
 
     def unregister(self, action: Type[Action], handler: ActionHandler):
-        if self._handlers.get(action) is not None:
+        if self._handlers.get(action) is None:
             return
         self._handlers[action].remove(handler)
+        if len(self._handlers[action]) == 0:
+            del self._handlers[action]
 
     def push(self, action: Action) -> None:
         self._queue.put(action)
@@ -53,7 +55,8 @@ class ActionDispatcher:
     def dispatch(self) -> None:
         while not self._queue.empty():
             action = self._queue.get()
-            for handler in self._handlers.get(type(action)):
+            handlers = self._handlers.get(type(action), [])
+            for handler in handlers:
                 self._exec_handler(action, handler)
 
     @_deb_action_exec_duration
