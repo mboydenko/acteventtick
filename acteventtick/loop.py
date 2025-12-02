@@ -26,6 +26,11 @@ def _deb_tick_duration(func):
     return tick_duration
 
 class ActEventTickLoop:
+    """
+    Lifecycle
+    1. Execute actions
+    2. Emit events
+    """
 
     def __init__(self, options: Options | None = None):
         if not options:
