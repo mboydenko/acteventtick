@@ -10,11 +10,9 @@ class MockAction(Action):
     payload: int
 
 
-class MockActionHandler(ActionHandler[MockAction]):
-    def __init__(self):
-        super().__init__(MockAction)
+class MockActionHandler(ActionHandler):
 
-    def execute(self, action: Action):
+    def execute(self, action: MockAction):
         ...
 
 

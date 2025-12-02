@@ -1,11 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar, Type
 
 from acteventtick.actions.action import Action
-
-
-T = TypeVar("T", bound=Action)
-
 
 def _check_action_type(method):
     def wrapper(self, action, *args, **kwargs):
@@ -14,11 +9,8 @@ def _check_action_type(method):
     return wrapper
 
 
-class ActionHandler(Generic[T], ABC):
-
-    def __init__(self, action_type: Type[T]):
-        self._action_type = action_type
+class ActionHandler(ABC):
 
     @abstractmethod
-    def execute(self, action: T) -> None:
+    def execute(self, action: Action) -> None:
         ...
